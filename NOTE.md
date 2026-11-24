@@ -10,7 +10,7 @@
 - **Basic guardrails:** characters don't deny being AI when sincerely asked. Content stays PG-13, with a crisis rule. There's a per-user rate limit so the free API key can't be drained.
 
 ## What I cut
-Login and sync across devices, AI-generated portraits (avatars are generated SVGs), editing or deleting characters, LLM-written greetings (custom characters get a template greeting per tone), retrieval over long histories (embeddings), image messages, analytics, tests.
+Login and sync across devices, illustrated or AI-generated portraits (characters are drawn by a small parametric SVG renderer: one drawing, full body when browsing, face crop in chat), editing or deleting characters, LLM-written greetings (custom characters get a template greeting per tone), retrieval over long histories (embeddings), image messages, analytics, tests.
 
 ## Time
 [roughly X hours, write your real number]
@@ -18,5 +18,5 @@ Login and sync across devices, AI-generated portraits (avatars are generated SVG
 ## With another week
 1. Accounts with magic link, claiming the anonymous data, so chats follow you across devices.
 2. Better memory: embeddings over past messages for recall of specific moments, and memory the character uses proactively ("how did Friday's interview go?" when you open the app).
-3. Character quality: AI-generated portraits, an LLM-written backstory and greeting from the user's choices, and a small eval set (scripted conversations scored for staying in voice).
+3. Character quality: richer art (expressions that change with the conversation's mood), an LLM-written backstory and greeting from the user's choices, and a small eval set (scripted conversations scored for staying in voice).
 4. Engagement: push notifications or character-initiated messages, then retention metrics (D1/D7, messages per session) to see what actually keeps people coming back.

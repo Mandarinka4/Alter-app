@@ -4,6 +4,7 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useEffect, useMemo, useState } from "react";
 import { Avatar } from "@/components/Avatar";
+import { Sparkle } from "@/components/Sparkle";
 import { GENDERS, TONES, TRAITS, type Gender } from "@/lib/personas";
 
 const MAX_TRAITS = 3;
@@ -57,7 +58,7 @@ export default function CreatePage() {
     <main className="page">
       <div className="brand">
         <Link href="/" className="icon-btn" aria-label="Back">←</Link>
-        <div style={{ fontWeight: 700 }}>New character</div>
+        <div className="screen-title">New character</div>
         <div style={{ width: 40 }} />
       </div>
 
@@ -66,12 +67,12 @@ export default function CreatePage() {
         <div className="avatar-picker">
           {seeds.map((s) => (
             <button key={s} className={s === chosenSeed ? "on" : ""} onClick={() => setAvatarSeed(s)} aria-label="Choose avatar">
-              <Avatar seed={s} gender={gender} />
+              <Avatar seed={s} gender={gender} view="full" />
             </button>
           ))}
         </div>
         <button className="btn btn-small" style={{ marginTop: 10 }} onClick={() => { setSeeds(randomSeeds()); setAvatarSeed(""); }}>
-          🎲 Shuffle looks
+          <Sparkle size={12} /> Shuffle looks
         </button>
       </div>
 

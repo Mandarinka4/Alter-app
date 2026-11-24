@@ -4,6 +4,7 @@ import Link from "next/link";
 import { useParams, useRouter } from "next/navigation";
 import { Fragment, useEffect, useRef, useState } from "react";
 import { Avatar } from "@/components/Avatar";
+import { Sparkle } from "@/components/Sparkle";
 import type { Character } from "@/lib/personas";
 import { dayLabel } from "@/lib/time";
 
@@ -132,7 +133,7 @@ export default function ChatPage() {
           );
         })}
         {(waitingForFirstToken || lastIsEmptyReply) && (
-          <div className="bubble assistant"><span className="typing"><i /><i /><i /></span></div>
+          <div className="bubble assistant"><span className="typing"><Sparkle size={9} /><Sparkle size={9} /><Sparkle size={9} /></span></div>
         )}
         {error && (
           <div className="bubble err">
@@ -172,7 +173,7 @@ export default function ChatPage() {
       {showMemory && character && (
         <div className="sheet-backdrop" onClick={() => setShowMemory(false)}>
           <div className="sheet" onClick={(e) => e.stopPropagation()}>
-            <h3>What {character.name} remembers</h3>
+            <h3><Sparkle size={16} /> What {character.name} remembers</h3>
             <p className="muted" style={{ marginTop: 0, fontSize: 14 }}>
               Updated in the background every few messages. The last 20 messages are always in view too.
             </p>

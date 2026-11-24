@@ -1,4 +1,8 @@
 import type { Metadata, Viewport } from "next";
+import "@fontsource/unbounded/latin-600.css";
+import "@fontsource/unbounded/latin-800.css";
+import "@fontsource/unbounded/cyrillic-600.css";
+import "@fontsource/unbounded/cyrillic-800.css";
 import "./globals.css";
 
 export const metadata: Metadata = {
@@ -10,13 +14,16 @@ export const viewport: Viewport = {
   width: "device-width",
   initialScale: 1,
   viewportFit: "cover",
-  themeColor: "#0f0d17",
+  themeColor: "#0b0b10",
 };
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
     <html lang="en">
-      <body>{children}</body>
+      <body>
+        <div className="sky" aria-hidden="true" />
+        {children}
+      </body>
     </html>
   );
 }

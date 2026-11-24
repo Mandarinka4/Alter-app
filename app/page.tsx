@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { useEffect, useState } from "react";
 import { Avatar } from "@/components/Avatar";
+import { Sparkle } from "@/components/Sparkle";
 import { TRAITS, type Character } from "@/lib/personas";
 import { shortTime } from "@/lib/time";
 
@@ -29,8 +30,8 @@ export default function HomePage() {
   return (
     <main className="page">
       <div className="brand">
-        <div className="logo"><span>Alter</span></div>
-        <Link href="/create" className="btn btn-primary btn-small">+ Create</Link>
+        <div className="logo"><span className="chrome-text">Alter</span><Sparkle size={18} className="twinkle" /></div>
+        <Link href="/create" className="btn btn-primary btn-small"><Sparkle size={12} /> Create</Link>
       </div>
 
       {error && <p className="error">{error}</p>}
@@ -38,7 +39,7 @@ export default function HomePage() {
 
       {data && data.chats.length > 0 && (
         <>
-          <div className="section-title">Your chats</div>
+          <div className="section-title"><Sparkle size={10} /> Your chats</div>
           {data.chats.map(({ character: c, lastMessage: m }) => (
             <Link key={c.id} href={`/c/${c.id}`} className="chat-row">
               <Avatar seed={c.avatarSeed} gender={c.gender} size={52} />
@@ -53,13 +54,13 @@ export default function HomePage() {
 
       {data && (
         <>
-          <div className="section-title">{data.chats.length ? "Meet someone new" : "Pick someone to talk to"}</div>
+          <div className="section-title"><Sparkle size={10} /> {data.chats.length ? "Meet someone new" : "Pick someone to talk to"}</div>
           <div className="grid">
             {[...newOwn, ...data.presets.filter((p) => !chattedIds.has(p.id))].map((c) => (
               <CharacterCard key={c.id} c={c} />
             ))}
             <Link href="/create" className="card card-new">
-              <div className="plus">+</div>
+              <div className="plus"><Sparkle size={40} className="twinkle" /></div>
               <div>Create your own</div>
             </Link>
           </div>
@@ -72,7 +73,7 @@ export default function HomePage() {
 function CharacterCard({ c }: { c: Character }) {
   return (
     <Link href={`/c/${c.id}`} className="card">
-      <Avatar seed={c.avatarSeed} gender={c.gender} />
+      <div className="stage"><Avatar seed={c.avatarSeed} gender={c.gender} view="full" /></div>
       <div className="name">{c.name}</div>
       <div className="tagline">{c.tagline}</div>
       <div className="chips">

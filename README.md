@@ -2,7 +2,7 @@
 
 A mobile-first companion chat MVP. Pick a ready-made character or create your own (look, gender, name, personality traits, tone of voice). Chat in real time, close the tab, come back days later: your characters, your conversations and what they remember about you are still there.
 
-**Stack:** Next.js 16 (App Router) on Vercel · Neon Postgres · Llama 3.3 70B on Groq · DiceBear avatars. Everything runs on free tiers, no credit card.
+**Stack:** Next.js 16 (App Router) on Vercel · Neon Postgres · Llama 3.3 70B on Groq · original hand-coded SVG characters. Everything runs on free tiers, no credit card.
 
 ## How it works
 
@@ -13,7 +13,7 @@ Phone browser ──► Next.js on Vercel
                    ├─ /api/chat/[id]         send a message → streamed reply
                    │      1. save user msg   2. build prompt   3. stream from Groq
                    │      4. save reply      5. after(): update memory (background)
-                   └─ /api/avatar/[seed]     SVG avatar, generated + cached
+                   └─ /api/avatar/[seed]     SVG character (full body or face crop), cached
                          │
                          ▼
                    Neon Postgres: characters · messages · memories
@@ -28,6 +28,8 @@ Phone browser ──► Next.js on Vercel
 **Accounts:** none for the MVP. Each browser gets an anonymous id in an httpOnly cookie, and all data hangs off it. This keeps onboarding at zero taps. Trade-off: switching device or clearing cookies loses the data.
 
 **Guardrails:** characters stay in role but don't deny being an AI when sincerely asked. Content is kept PG-13, with a crisis-safety rule. There's a per-user hourly message cap to protect the free API quota, and input length limits.
+
+**Look:** chrome / liquid-metal Y2K theme (silver surfaces, four-point chrome sparkles, holographic glows), a current Instagram/design trend.
 
 ## Run locally
 
@@ -55,6 +57,7 @@ Any OpenAI-compatible provider works: set `LLM_BASE_URL`, `CHAT_MODEL`, `MEMORY_
 |---|---|
 | `lib/personas.ts` | Traits, tones, preset characters (+ signature habits) |
 | `lib/prompt.ts` | Character profile + memory → system prompt |
+| `lib/avatar.ts` | Parametric cartoon characters: one drawing, full-body and face crops |
 | `lib/memory.ts` | History window, background memory card updates |
 | `lib/llm.ts` | Streaming OpenAI-compatible client, mock fallback |
 | `lib/db.ts` | Schema + Postgres access (Neon / PGlite) |
