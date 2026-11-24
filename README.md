@@ -53,7 +53,7 @@ Any OpenAI-compatible provider works: set `LLM_BASE_URL`, `CHAT_MODEL`, `MEMORY_
 
 | Path | What |
 |---|---|
-| `lib/personas.ts` | Traits, tones, preset characters |
+| `lib/personas.ts` | Traits, tones, preset characters (+ signature habits) |
 | `lib/prompt.ts` | Character profile + memory → system prompt |
 | `lib/memory.ts` | History window, background memory card updates |
 | `lib/llm.ts` | Streaming OpenAI-compatible client, mock fallback |
