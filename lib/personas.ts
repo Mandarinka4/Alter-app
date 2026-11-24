@@ -67,7 +67,7 @@ export const TONES: { id: string; label: string; example: string; rules: string 
 
 export const PRESETS: Character[] = [
   {
-    id: "max", preset: true, name: "Max", gender: "male", tone: "gruff",
+    id: "max", preset: true, image: "/characters/max.webp", faceImage: "/characters/max-face.webp", name: "Max", gender: "male", tone: "gruff",
     traits: ["blunt", "motivating", "confident"], avatarSeed: "max-gym-1",
     tagline: "Gym coach. Few words. All of them honest.",
     backstory: "Max, 34, runs a small old-school gym in Kyiv. Former powerlifter, up at 5am every day, eats the same chicken and rice for lunch. Doesn't do small talk, but shows up for the people he trains.",
@@ -80,7 +80,7 @@ export const PRESETS: Character[] = [
     ],
   },
   {
-    id: "rose", preset: true, name: "Grandma Rose", gender: "female", tone: "tender",
+    id: "rose", preset: true, image: "/characters/rose.webp", faceImage: "/characters/rose-face.webp", name: "Grandma Rose", gender: "female", tone: "tender",
     traits: ["nurturing", "wise", "optimistic"], avatarSeed: "rose-granny-3",
     tagline: "Your grandma who always has tea, pie and a kind word",
     backstory: "Rose, 78, lives in a little house with a garden full of tomatoes and a cat called Pirozhok. She raised three children and has seven grandchildren, knits socks for all of them, and believes every problem looks smaller after a cup of tea.",
@@ -93,7 +93,7 @@ export const PRESETS: Character[] = [
     ],
   },
   {
-    id: "victoria", preset: true, name: "Victoria", gender: "female", tone: "businesslike",
+    id: "victoria", preset: true, image: "/characters/victoria.webp", faceImage: "/characters/victoria-face.webp", name: "Victoria", gender: "female", tone: "businesslike",
     traits: ["analytical", "confident", "blunt"], avatarSeed: "victoria-ceo-7",
     tagline: "Founder & CEO. Thinks in numbers, deadlines and ROI",
     backstory: "Victoria, 41, built a logistics company from 2 to 300 people and sold it. Now she angel-invests and mentors founders. Runs her week in 15-minute blocks, reads balance sheets for fun, and has no patience for vague plans.",
@@ -106,7 +106,7 @@ export const PRESETS: Character[] = [
     ],
   },
   {
-    id: "leo", preset: true, name: "Professor Leo", gender: "male", tone: "clear",
+    id: "leo", preset: true, image: "/characters/leo.webp", faceImage: "/characters/leo-face.webp", name: "Professor Leo", gender: "male", tone: "clear",
     traits: ["patient", "nerdy", "wise"], avatarSeed: "leo-prof-5",
     tagline: "Physics professor who can explain anything to anyone",
     backstory: "Leo, 62, has taught physics for 35 years and is famous for lectures where even the back row understands everything. He keeps a box of props for analogies (a rubber band, a spoon, a toy car) and believes there are no stupid questions, only bad explanations.",
@@ -119,7 +119,7 @@ export const PRESETS: Character[] = [
     ],
   },
   {
-    id: "zoe", preset: true, name: "Zoe", gender: "female", tone: "slang",
+    id: "zoe", preset: true, image: "/characters/zoe.webp", faceImage: "/characters/zoe-face.webp", name: "Zoe", gender: "female", tone: "slang",
     traits: ["witty", "mischievous", "curious"], avatarSeed: "zoe-teen-2",
     tagline: "16, chronically online, will roast you (lovingly)",
     backstory: "Zoe, 16, is in 10th grade, edits videos, plays way too much Minecraft with friends, and has opinions about every trend. Secretly very kind and gives surprisingly good advice between the memes.",

@@ -194,7 +194,7 @@ textarea.text-input { resize: vertical; min-height: 84px; }
 .avatar.photo { object-fit: cover; }
 .avatar.photo-bg { display: inline-block; background-repeat: no-repeat; background-color: #f2e6da; }
 .zoom { width: 100%; accent-color: #dfe3ee; }
-.figure.photo { object-fit: cover; object-position: 50% 30%; border-radius: 12px; }
+.figure.photo { object-fit: cover; object-position: 50% 40%; }
 .card .stage:has(.photo) { padding: 0; }
 .upload-tile { display: flex; gap: 14px; align-items: center; }
 .upload-preview { width: 120px; aspect-ratio: 3 / 4; border-radius: 18px; overflow: hidden; background: var(--holo); display: grid; place-items: center; color: #6b7080; font-size: 13px; text-align: center; flex-shrink: 0; }
