@@ -6,8 +6,14 @@ export type ChatMessage = { role: "system" | "user" | "assistant"; content: stri
 
 const BASE_URL = process.env.LLM_BASE_URL || "https://api.groq.com/openai/v1";
 const API_KEY = process.env.LLM_API_KEY || process.env.GROQ_API_KEY || "";
-export const CHAT_MODEL = process.env.CHAT_MODEL || "llama-3.3-70b-versatile";
-export const MEMORY_MODEL = process.env.MEMORY_MODEL || "llama-3.1-8b-instant";
+// Groq retired its free Llama 3.x models on 16 Aug 2026; GPT-OSS is the recommended replacement.
+export const CHAT_MODEL = process.env.CHAT_MODEL || "openai/gpt-oss-120b";
+export const MEMORY_MODEL = process.env.MEMORY_MODEL || "openai/gpt-oss-20b";
+
+// GPT-OSS models "think" before answering. Keep that short (fast replies) and
+// out of the response, and leave room for it in the token budget.
+const reasoningParams = (model: string) =>
+  model.startsWith("openai/gpt-oss") ? { reasoning_effort: "low", include_reasoning: false } : {};
 export const isMock = !API_KEY;
 
 export class LLMError extends Error {
@@ -48,7 +54,8 @@ export async function openChatStream(
     messages,
     stream: true,
     temperature: opts.temperature ?? 0.9,
-    max_tokens: opts.maxTokens ?? 400,
+    max_completion_tokens: opts.maxTokens ?? 1200,
+    ...reasoningParams(CHAT_MODEL),
   });
   return parseSSE(res.body!);
 }
@@ -80,13 +87,15 @@ async function* parseSSE(body: ReadableStream<Uint8Array>): AsyncGenerator<strin
 
 /** Non-streaming JSON completion, used for the background memory pass. */
 export async function completeJSON(messages: ChatMessage[]): Promise<any> {
-  const res = await post({
-    model: MEMORY_MODEL,
-    messages,
-    temperature: 0.2,
-    max_tokens: 700,
-    response_format: { type: "json_object" },
-  });
+  const base = { model: MEMORY_MODEL, messages, temperature: 0.2, max_completion_tokens: 2000, ...reasoningParams(MEMORY_MODEL) };
+  let res: Response;
+  try {
+    res = await post({ ...base, response_format: { type: "json_object" } });
+  } catch (e) {
+    // Some models reject JSON mode; the prompt asks for JSON anyway.
+    if (e instanceof LLMError && e.status === 400) res = await post(base);
+    else throw e;
+  }
   const data = await res.json();
   const text: string = data.choices?.[0]?.message?.content ?? "{}";
   try {
