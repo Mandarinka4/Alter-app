@@ -16,6 +16,12 @@ export type Character = {
   avatarSeed: string;
   greeting: string;
   preset: boolean;
+  /** URL of a picture instead of the drawn avatar (uploaded, or a preset illustration). */
+  image?: string;
+  /** Optional separate face crop for `image`. */
+  faceImage?: string;
+  /** Without faceImage: how much to zoom into the top of `image` for the round avatar (1 = whole width). */
+  faceZoom?: number;
   /** Speech habits for hand-written presets (not yet exposed in the creator). */
   quirks?: string[];
 };

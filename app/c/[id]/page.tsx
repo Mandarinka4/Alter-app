@@ -3,7 +3,7 @@
 import Link from "next/link";
 import { useParams, useRouter } from "next/navigation";
 import { Fragment, useEffect, useRef, useState } from "react";
-import { Avatar } from "@/components/Avatar";
+import { CharacterPic } from "@/components/Avatar";
 import { Sparkle } from "@/components/Sparkle";
 import type { Character } from "@/lib/personas";
 import { dayLabel } from "@/lib/time";
@@ -113,7 +113,7 @@ export default function ChatPage() {
     <div className="chat">
       <header className="chat-header">
         <Link href="/" className="icon-btn" aria-label="Back">←</Link>
-        {character && <Avatar seed={character.avatarSeed} gender={character.gender} size={40} />}
+        {character && <CharacterPic c={character} size={40} />}
         <div className="who">
           <div className="n">{character?.name ?? " "}</div>
           <div className="s">{streaming ? "typing…" : character?.tagline}</div>

@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { useEffect, useState } from "react";
-import { Avatar } from "@/components/Avatar";
+import { CharacterPic } from "@/components/Avatar";
 import { Sparkle } from "@/components/Sparkle";
 import { TRAITS, type Character } from "@/lib/personas";
 import { shortTime } from "@/lib/time";
@@ -42,7 +42,7 @@ export default function HomePage() {
           <div className="section-title"><Sparkle size={10} /> Your chats</div>
           {data.chats.map(({ character: c, lastMessage: m }) => (
             <Link key={c.id} href={`/c/${c.id}`} className="chat-row">
-              <Avatar seed={c.avatarSeed} gender={c.gender} size={52} />
+              <CharacterPic c={c} size={52} />
               <div className="meta">
                 <div className="name">{c.name}<span className="time">{shortTime(m.at)}</span></div>
                 <div className="preview">{m.role === "user" ? "You: " : ""}{m.content}</div>
@@ -73,7 +73,7 @@ export default function HomePage() {
 function CharacterCard({ c }: { c: Character }) {
   return (
     <Link href={`/c/${c.id}`} className="card">
-      <div className="stage"><Avatar seed={c.avatarSeed} gender={c.gender} view="full" /></div>
+      <div className="stage"><CharacterPic c={c} view="full" /></div>
       <div className="name">{c.name}</div>
       <div className="tagline">{c.tagline}</div>
       <div className="chips">

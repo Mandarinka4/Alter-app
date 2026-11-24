@@ -1,14 +1,31 @@
 "use client";
+/* eslint-disable @next/next/no-img-element */
 
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { Avatar } from "@/components/Avatar";
 import { Sparkle } from "@/components/Sparkle";
 import { GENDERS, TONES, TRAITS, type Gender } from "@/lib/personas";
 
 const MAX_TRAITS = 3;
 const INITIAL_SEEDS = ["nova", "ash", "rio", "maple", "zen", "ivy", "jules", "orion"];
+const MAX_SIDE = 768; // px, longest side after resizing
+
+/** Resize an uploaded picture in the browser so only a small JPEG is stored. */
+async function toSmallJpeg(file: File): Promise<string> {
+  const bitmap = await createImageBitmap(file);
+  const scale = Math.min(1, MAX_SIDE / Math.max(bitmap.width, bitmap.height));
+  const canvas = document.createElement("canvas");
+  canvas.width = Math.round(bitmap.width * scale);
+  canvas.height = Math.round(bitmap.height * scale);
+  const ctx = canvas.getContext("2d")!;
+  ctx.fillStyle = "#f2e6da"; // background for transparent PNGs
+  ctx.fillRect(0, 0, canvas.width, canvas.height);
+  ctx.drawImage(bitmap, 0, 0, canvas.width, canvas.height);
+  return canvas.toDataURL("image/jpeg", 0.85);
+}
+
 const randomSeeds = () => Array.from({ length: 8 }, () => Math.random().toString(36).slice(2, 9));
 
 export default function CreatePage() {
@@ -25,9 +42,13 @@ export default function CreatePage() {
   const [backstory, setBackstory] = useState("");
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState("");
+  const [lookMode, setLookMode] = useState<"draw" | "upload">("draw");
+  const [image, setImage] = useState<string | null>(null);
+  const [faceZoom, setFaceZoom] = useState(1);
+  const fileRef = useRef<HTMLInputElement>(null);
 
   const chosenSeed = avatarSeed || seeds[0];
-  const canSave = name.trim() && traits.length > 0 && !saving;
+  const canSave = name.trim() && traits.length > 0 && !saving && (lookMode === "draw" || !!image);
 
   const toggleTrait = (id: string) =>
     setTraits((t) => (t.includes(id) ? t.filter((x) => x !== id) : t.length < MAX_TRAITS ? [...t, id] : t));
@@ -43,7 +64,7 @@ export default function CreatePage() {
     const res = await fetch("/api/characters", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ name, gender, traits, tone, tagline, backstory, avatarSeed: chosenSeed }),
+      body: JSON.stringify({ name, gender, traits, tone, tagline, backstory, avatarSeed: chosenSeed, image: lookMode === "upload" ? image : null, faceZoom }),
     });
     const data = await res.json().catch(() => ({}));
     if (!res.ok) {
@@ -63,17 +84,63 @@ export default function CreatePage() {
       </div>
 
       <div className="field">
-        <span className="label">Look <span className="hint">· tap to choose</span></span>
-        <div className="avatar-picker">
-          {seeds.map((s) => (
-            <button key={s} className={s === chosenSeed ? "on" : ""} onClick={() => setAvatarSeed(s)} aria-label="Choose avatar">
-              <Avatar seed={s} gender={gender} view="full" />
-            </button>
-          ))}
+        <span className="label">Look</span>
+        <div className="segmented" style={{ marginBottom: 12 }}>
+          <button className={lookMode === "draw" ? "on" : ""} onClick={() => setLookMode("draw")}>Draw for me</button>
+          <button className={lookMode === "upload" ? "on" : ""} onClick={() => setLookMode("upload")}>My own picture</button>
         </div>
-        <button className="btn btn-small" style={{ marginTop: 10 }} onClick={() => { setSeeds(randomSeeds()); setAvatarSeed(""); }}>
-          <Sparkle size={12} /> Shuffle looks
-        </button>
+
+        {lookMode === "draw" ? (
+          <>
+            <div className="avatar-picker">
+              {seeds.map((s) => (
+                <button key={s} className={s === chosenSeed ? "on" : ""} onClick={() => setAvatarSeed(s)} aria-label="Choose look">
+                  <Avatar seed={s} gender={gender} view="full" />
+                </button>
+              ))}
+            </div>
+            <button className="btn btn-small" style={{ marginTop: 10 }} onClick={() => { setSeeds(randomSeeds()); setAvatarSeed(""); }}>
+              <Sparkle size={12} /> Shuffle looks
+            </button>
+          </>
+        ) : (
+          <div className="upload-tile">
+            <button className="upload-preview" onClick={() => fileRef.current?.click()} aria-label="Choose picture" style={{ border: 0 }}>
+              {image ? <img src={image} alt="" /> : <span>Tap to choose<br />a picture</span>}
+            </button>
+            <div style={{ display: "grid", gap: 10, justifyItems: "start" }}>
+              {image && (
+                <>
+                  <Avatar seed="" image={image} faceZoom={faceZoom} size={64} />
+                  <label className="hint" style={{ width: "100%" }}>
+                    Zoom into the face
+                    <input className="zoom" type="range" min={1} max={3} step={0.1} value={faceZoom} onChange={(e) => setFaceZoom(Number(e.target.value))} />
+                  </label>
+                </>
+              )}
+              <button className="btn btn-small" onClick={() => fileRef.current?.click()}>
+                <Sparkle size={12} /> {image ? "Change picture" : "Upload picture"}
+              </button>
+              <span className="hint">A drawing or illustration works best. Use the slider to frame the face for chat. Only you can see it.</span>
+            </div>
+            <input
+              ref={fileRef}
+              type="file"
+              accept="image/*"
+              hidden
+              onChange={async (e) => {
+                const file = e.target.files?.[0];
+                if (!file) return;
+                try {
+                  setImage(await toSmallJpeg(file));
+                  setError("");
+                } catch {
+                  setError("Couldn't read that picture. Try a JPG or PNG.");
+                }
+              }}
+            />
+          </div>
+        )}
       </div>
 
       <div className="field">
@@ -132,7 +199,7 @@ export default function CreatePage() {
       <div className="sticky-cta">
         {error && <p className="error">{error}</p>}
         <button className="btn btn-primary" style={{ width: "100%", display: "flex", alignItems: "center", justifyContent: "center", gap: 10 }} disabled={!canSave} onClick={save}>
-          <Avatar seed={chosenSeed} gender={gender} size={28} />
+          {lookMode === "upload" && image ? <Avatar seed="" image={image} faceZoom={faceZoom} size={28} /> : <Avatar seed={chosenSeed} gender={gender} size={28} />}
           {saving ? "Creating…" : name.trim() ? `Start chatting with ${name.trim()}` : "Create character"}
         </button>
       </div>

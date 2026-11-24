@@ -21,6 +21,9 @@ const SCHEMA = [
      created_at  TIMESTAMPTZ NOT NULL DEFAULT now()
    )`,
   `CREATE INDEX IF NOT EXISTS characters_owner ON characters(owner_id)`,
+  // Optional user-uploaded picture, stored as a small data URL (resized in the browser).
+  `ALTER TABLE characters ADD COLUMN IF NOT EXISTS image TEXT`,
+  `ALTER TABLE characters ADD COLUMN IF NOT EXISTS face_zoom REAL`,
   `CREATE TABLE IF NOT EXISTS messages (
      id           BIGSERIAL PRIMARY KEY,
      user_id      TEXT NOT NULL,
