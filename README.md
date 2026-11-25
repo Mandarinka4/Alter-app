@@ -2,7 +2,7 @@
 
 A mobile-first companion chat MVP. Pick a ready-made character or create your own (look, gender, name, personality traits, tone of voice). For the look, either pick a generated illustration or upload your own picture. Chat in real time, close the tab, come back days later: your characters, your conversations and what they remember about you are still there.
 
-**Stack:** Next.js 16 (App Router) on Vercel · Neon Postgres · Llama 3.3 70B on Groq · original hand-coded SVG characters. Everything runs on free tiers, no credit card.
+**Stack:** Next.js 16 (App Router) on Vercel · Neon Postgres · GPT-OSS 120B on Groq · original hand-coded SVG characters. Everything runs on free tiers, no credit card.
 
 ## How it works
 
@@ -23,7 +23,7 @@ Phone browser ──► Next.js on Vercel
 
 **Memory** (`lib/memory.ts`), in two layers:
 1. *Short-term:* the last 20 messages are sent verbatim.
-2. *Long-term:* a "memory card" per user × character, made of facts about the user plus a running summary of the relationship. Every 6 new messages, a background job (`after()`, so it never delays a reply) asks a small fast model (Llama 3.1 8B) to merge the new messages into the card. The card goes into the system prompt, so prompt size stays flat however long the chat gets. Users can see the card (🧠 button) and wipe it ("Start over").
+2. *Long-term:* a "memory card" per user × character, made of facts about the user plus a running summary of the relationship. Every 6 new messages, a background job (`after()`, so it never delays a reply) asks a small fast model (GPT-OSS 20B) to merge the new messages into the card. The card goes into the system prompt, so prompt size stays flat however long the chat gets. Users can see the card (🧠 button) and wipe it ("Start over").
 
 **Character pictures:** the five ready-made characters use illustrations generated with Google Gemini (`public/characters/`, full body plus a separate face crop, ~30 KB WebP each). Custom characters are drawn by `lib/avatar.ts` (one SVG, full body for browsing, cropped to the face for chat). Uploaded pictures are resized in the browser (max 768 px JPEG, ~50 to 150 KB), stored in the `characters.image` column, and served privately by `/api/image/[id]` (only the creator's cookie can load them). A face-zoom slider sets how the round chat avatar is framed. No extra storage service needed.
 
