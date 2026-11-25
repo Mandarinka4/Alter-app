@@ -1,24 +1,17 @@
-# Alter: note for Alessio
+# Alter - note
 
-**Live:** [your-vercel-url] · **Code:** [your-github-url]
+**What I built**
+Alter lets you pick one of five ready-made characters or create your own, chat with them in real time, and come back later to find everything where you left it. Characters remember what you've told them, and the brain icon at the top of the chat shows exactly what they remember, with an option to wipe it.
 
-## Main choices and why
-- **Next.js on Vercel + Neon Postgres + Groq.** One codebase for UI and API, a free deploy, and a real database. I picked Groq (Llama 3.3 70B) for speed: in a companion app, how fast the first words appear matters as much as reply quality. The client is plain OpenAI-compatible, so changing model or provider is a config change.
-- **Personality as structured choices, compiled into behaviour.** The user picks up to 3 traits and a tone. Each trait maps to a concrete rule ("ask at most one question", "drop the sarcasm when they're upset"). Each tone maps to writing rules plus an example line. This gives more consistent characters than a free-text prompt, and keeps the creator fast to use on a phone. A short style reminder after the history stops long chats drifting out of voice.
-- **Two-layer memory.** The last 20 messages are sent verbatim. On top of that, every 6 messages a small model (Llama 3.1 8B) runs in the background, after the reply is sent, and updates a "memory card": facts about the user plus a summary of the relationship. That card is part of every prompt. Cost per message stays flat, and old details survive. Users can see the card (🧠) and wipe it, which I think matters for trust in this category.
-- **Illustrated presets:** the five ready-made characters are illustrations I generated with Gemini from a shared style prompt, so the cast looks consistent; each has a full-body image for browsing and a face crop for chat.
-- **Two ways to get a look for your own character:** a generated illustrated character (my own SVG renderer, so it's free and every seed is new) or the user's own picture, resized in the browser and stored privately in Postgres, with a slider to frame the face for chat.
-- **No accounts:** an anonymous httpOnly cookie. There's zero friction before the first chat, and everything persists on that device.
-- **Basic guardrails:** characters don't deny being AI when sincerely asked. Content stays PG-13, with a crisis rule. There's a per-user rate limit so the free API key can't be drained.
+**Main choices**
+1.	Stack: Next.js on Vercel, Postgres on Neon, GPT-OSS 120B on Groq, all on free tiers. I picked Groq mainly for speed, since in a chat how fast the first words appear matters a lot. 
+2.	Personality: instead of a free-text prompt, you choose traits and a tone, and each one maps to concrete rules. For example, "Curious" means following up on details, but asking at most one question per message. Characters stay more consistent this way, and setting one up on a phone is quick. They also reply in whatever language you write in.
+3.	Look: the five ready-made characters are illustrations I generated with Gemini from one shared style prompt, so they feel like one cast. For your own character, you can pick a generated drawing or upload a picture.
+4.	Memory: the last 20 messages go to the model as they are, and every six messages a smaller model updates a short memory card (facts about you plus a summary of the conversation) in the background. That keeps the prompt roughly the same size however long the chat gets.
+5.	No accounts: an anonymous cookie, so you can start chatting straight away. The catch is that your chats stay on one device.
 
-## What I cut
-Login and sync across devices, moderation of uploaded pictures (they're private to the creator for now), illustrated or AI-generated portraits (characters are drawn by a small parametric SVG renderer: one drawing, full body when browsing, face crop in chat), editing or deleting characters, LLM-written greetings (custom characters get a template greeting per tone), retrieval over long histories (embeddings), image messages, analytics, tests.
+**What I cut:** login and sync across devices, editing and deleting characters, and moderation of uploaded pictures.
 
-## Time
-[roughly X hours, write your real number]
+**Time:** about 2.5-3 hours.
 
-## With another week
-1. Accounts with magic link, claiming the anonymous data, so chats follow you across devices.
-2. Better memory: embeddings over past messages for recall of specific moments, and memory the character uses proactively ("how did Friday's interview go?" when you open the app).
-3. Character quality: richer art (expressions that change with the conversation's mood), an LLM-written backstory and greeting from the user's choices, and a small eval set (scripted conversations scored for staying in voice).
-4. Engagement: push notifications or character-initiated messages, then retention metrics (D1/D7, messages per session) to see what actually keeps people coming back.
+**With another week:** passwordless login via email (magic link) that keeps your existing chats; smarter memory (search over older messages, and characters who bring things up on their own, like "How did the interview go?"); a small set of scripted conversations to check that each character stays in voice; and simple tracking of how many people come back after a day or a week.
